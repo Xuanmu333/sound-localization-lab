@@ -1,4 +1,6 @@
 export const C = 343;
+export const SOURCE_BOUNDS = {x:7,y:4.5};
+export const FIELD_BOUNDS = {x:8,y:5.5};
 export const MICS = [{id:'A',x:-4,y:2.5},{id:'B',x:4,y:2.5},{id:'C',x:4,y:-2.5},{id:'D',x:-4,y:-2.5}];
 export const distance = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
 export function observe(source) {
@@ -8,7 +10,7 @@ export function observe(source) {
 // The inverse model only receives sensor geometry and measured time differences.
 export function locate(deltas) {
   let best={x:0,y:0,residual:Infinity};
-  for(const sx of [-4,0,4]) for(const sy of [-2.5,0,2.5]) {
+  for(const sx of [-SOURCE_BOUNDS.x,-4,0,4,SOURCE_BOUNDS.x]) for(const sy of [-SOURCE_BOUNDS.y,-2.5,0,2.5,SOURCE_BOUNDS.y]) {
     let x=sx,y=sy;
     for(let k=0;k<50;k++) {
       const d0=Math.max(1e-8,Math.hypot(x-MICS[0].x,y-MICS[0].y));
@@ -37,7 +39,7 @@ export function locate(deltas) {
 export function contour(index,delta) {
   const segments=[],step=.14;
   const f=(x,y)=>distance({x,y},MICS[index])-distance({x,y},MICS[0])-C*delta;
-  for(let x=-5.5;x<5.5;x+=step)for(let y=-3.65;y<3.65;y+=step){
+  for(let x=-FIELD_BOUNDS.x;x<FIELD_BOUNDS.x;x+=step)for(let y=-FIELD_BOUNDS.y;y<FIELD_BOUNDS.y;y+=step){
     const p=[[x,y],[x+step,y],[x+step,y+step],[x,y+step]],v=p.map(q=>f(...q)),hits=[];
     for(let i=0;i<4;i++) {const j=(i+1)%4;if((v[i]<0)!==(v[j]<0)){const t=v[i]/(v[i]-v[j]);hits.push([p[i][0]+t*(p[j][0]-p[i][0]),p[i][1]+t*(p[j][1]-p[i][1])]);}}
     if(hits.length===2)segments.push(...hits);

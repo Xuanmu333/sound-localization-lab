@@ -36,3 +36,21 @@ test('rendered contour vertices satisfy their measured distance differences',()=
     }
   }
 });
+
+test('recovers sources inside and outside the microphone array across the expanded area',()=>{
+  let count=0;
+  for(let x=-7;x<=7;x+=.25)for(let y=-4.5;y<=4.5;y+=.25){
+    const actual={x,y};
+    assert(distance(actual,locate(observe(actual).deltas))<1e-6,`Position (${x}, ${y})`);
+    count++;
+  }
+  assert.equal(count,2109);
+});
+
+test('each distance-difference curve reaches a source outside the array',()=>{
+  const source={x:-6.75,y:4.5}, {deltas}=observe(source);
+  for(let i=1;i<MICS.length;i++){
+    const vertices=contour(i,deltas[i]);
+    assert(vertices.some(([x,y])=>distance({x,y},source)<.15));
+  }
+});
