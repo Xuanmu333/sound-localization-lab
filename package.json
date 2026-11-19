@@ -1,0 +1,19 @@
+{
+  "name": "sound-localization-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "An offline interactive 3D sound-source localization experiment using TDOA.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/model.test.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.1"
+  }
+}
